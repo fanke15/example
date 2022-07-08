@@ -34,6 +34,7 @@ type StakedInfo struct {
 	PerIncome         decimal.Decimal `json:"per_income"`
 	APR               decimal.Decimal `json:"apr"`
 }
+
 type (
 	epochResp struct {
 		Status string
