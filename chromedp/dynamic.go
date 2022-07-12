@@ -35,16 +35,25 @@ func main() {
 	sel := "#__next > div > main > div:nth-child(1) > div > section > div > div > article:nth-child(1) > div > div > table > tbody"
 
 	clickSel := "#__next > div > main > div:nth-child(1) > div > section > div > div > article:nth-child(1) > div > ul > li:nth-child(6) > button"
+
+	// clickSelOpt1 := "#__next > div > main > div:nth-child(1) > div > section > div > div > article:nth-child(1) > div > ul > li:nth-child(5) > select > option:nth-child(7)"
 	var body string
-	if err := chromedp.Run(timeoutCtx,
-		chromedp.Navigate("https://dune.com/fanke/postat"),
-		chromedp.WaitVisible(sel),
-		chromedp.Click(clickSel, chromedp.NodeVisible),
-		chromedp.OuterHTML("html", &body),
-	); err != nil {
+	var clickOpt = make([]chromedp.Action, 0)
+	clickOpt = append(clickOpt, chromedp.Navigate("https://dune.com/fanke/postat"))
+	clickOpt = append(clickOpt, chromedp.WaitVisible(sel))
+	for i := 0; i < 30; i++ {
+		clickOpt = append(clickOpt, chromedp.Click(clickSel))
+	}
+	clickOpt = append(clickOpt, chromedp.OuterHTML("html", &body))
+
+	for i := 0; i < 30; i++ {
+		clickOpt = append(clickOpt, chromedp.Click(clickSel))
+	}
+
+	if err := chromedp.Run(timeoutCtx, clickOpt...); err != nil {
 		log.Fatalf("Failed getting body: %v", err)
 	}
-	chromedp.ClickCount(5)
+
 	log.Println("Body of duckduckgo.com starts with:")
 	// log.Println(body)
 
