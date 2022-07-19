@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"log"
-	"math"
 	"strings"
 	"time"
 
@@ -13,7 +12,7 @@ import (
 )
 
 func main() {
-	totalPageNum := int(math.Ceil((DateInterval("2006-01-02 15:04", "2020-11-03 00:00", "2022-07-12 00:00") + 1) / 25))
+	//totalPageNum := int(math.Ceil((DateInterval("2006-01-02 15:04", "2020-11-03 00:00", "2022-07-12 00:00") + 1) / 25))
 
 	var c, cancel = initDB()
 	defer cancel()
@@ -31,7 +30,7 @@ func main() {
 	clickOpt = append(clickOpt, chromedp.Navigate("https://dune.com/fanke/postat"))
 	clickOpt = append(clickOpt, chromedp.WaitVisible(sel))
 
-	for i := 0; i < totalPageNum; i++ {
+	for i := 0; i < 1; i++ {
 		var res string
 		if i > 0 {
 			clickOpt = append(clickOpt, chromedp.Click(clickSel))
@@ -49,16 +48,21 @@ func main() {
 	log.Println("Body of duckduckgo.com starts with:")
 	// log.Println(body)
 
-	for index, v := range respDodys {
+	for _, v := range respDodys {
 		dom, e := goquery.NewDocumentFromReader(strings.NewReader(*v))
 		if e != nil {
 			fmt.Println(1111, e)
 		}
 		dom.Find("tbody tr").Each(func(i int, sel1 *goquery.Selection) {
+			//fmt.Println(sel1.Find("td:nth-child(1)").Text())
+			//fmt.Println(sel1.Find("td:nth-child(2)").Text())
+			//fmt.Println(sel1.Find("td:nth-child(3)").Text())
+
 			sel1.Find("td").Each(func(j int, sel2 *goquery.Selection) {
-				fmt.Println(index, i, j, sel2.Text())
+				//fmt.Println(index, i, j, sel2.Text())
 			})
 		})
+
 	}
 }
 
