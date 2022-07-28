@@ -12,7 +12,7 @@ html lang=en
       body,
       .app-wrapper {
         position: relative;
-        width: 100%;
+        width: 60%;
         height: 100%;
         margin: 0;
         padding: 0;
@@ -27,26 +27,9 @@ html lang=en
       (function () {
         let amis = amisRequire('amis/embed');
         // 通过替换下面这个配置来生成不同页面
-        let amisJSON = {
-          type: 'page',
-          title: '表单页面',
-          body: {
-            type: 'form',
-            mode: 'horizontal',
-            api: '/saveForm',
-            body: [
-              {
-                label: 'Name',
-                type: 'input-text',
-                name: 'name'
-              },
-              {
-                label: 'Email',
-                type: 'input-email',
-                name: 'email'
-              }
-            ]
-          }
-        };
-        let amisScoped = amis.embed('#root', amisJSON);
+        $.getJSON("default.json",function(data){
+        let a = data
+        })
+
+        let amisScoped = amis.embed('#root', a);
       })();
