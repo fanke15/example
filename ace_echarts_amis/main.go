@@ -9,6 +9,8 @@ import (
 func main() {
 	r := gin.Default()
 
+	r.Static("/assets", "./")
+
 	tpl, err := ace.Load("default", "", nil)
 	if err != nil {
 		fmt.Println("EOF:", err)
@@ -16,7 +18,7 @@ func main() {
 	}
 
 	r.GET("/", func(c *gin.Context) {
-		tpl.Execute(c.Writer, nil)
+		_ = tpl.Execute(c.Writer, nil)
 	})
-	r.Run() // listen and serve on 0.0.0.0:8080
+	_ = r.Run() // listen and serve on 0.0.0.0:8080
 }
