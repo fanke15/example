@@ -13,13 +13,14 @@ import (
 )
 
 func main() {
-	data, all, _ := GetOtherPriceHistoryByCoin(
+	data, all, current, _ := GetOtherPriceHistoryByCoin(
 		[]decimal.Decimal{decimal.NewFromFloat(0.95), decimal.NewFromFloat(0.96)},
 		[]decimal.Decimal{decimal.NewFromFloat(0.97), decimal.NewFromFloat(0.98)},
 	)
 
 	Write("back_test.csv", data)
 	Write2("all.csv", all)
+	Write3("current.csv", current)
 }
 
 var (
@@ -57,13 +58,21 @@ type BackTest struct {
 	End   PriceData
 }
 
+type CurrentDay struct {
+	Unix int64
+	Min  decimal.Decimal
+	Max  decimal.Decimal
+}
+
 // 从coingecko获取令牌历史价格，交易量数据
-func GetOtherPriceHistoryByCoin(min, max []decimal.Decimal) (data []BackTest, price []PriceData, err error) {
+func GetOtherPriceHistoryByCoin(min, max []decimal.Decimal) (data []BackTest, price []PriceData, current []CurrentDay, err error) {
 	var (
 		tempData  coingeckoPriceData
 		tempPrice = make([]PriceData, 0)
 
 		nextTempPrice = make([]PriceData, 0)
+
+		currentMap = make(map[int64]CurrentDay)
 	)
 
 	resp, err := InitReq().SetResult(&tempData).Get("https://www.coingecko.com/price_charts/13442/eth/90_days.json")
@@ -82,7 +91,30 @@ func GetOtherPriceHistoryByCoin(min, max []decimal.Decimal) (data []BackTest, pr
 			Unix:  v[0].IntPart(),
 			Price: v[1],
 		})
+
+		// 渲染该天的最大最小值
+		cDay := GetDateByNS(v[0].IntPart(), 8*60*60*1000)
+		if ct, ok := currentMap[cDay]; ok {
+			currentMap[cDay] = CurrentDay{
+				Unix: cDay,
+				Min:  decimal.Min(v[1], ct.Min),
+				Max:  decimal.Max(v[1], ct.Max),
+			}
+		} else {
+			currentMap[cDay] = CurrentDay{
+				Unix: cDay,
+				Min:  v[1],
+				Max:  v[1],
+			}
+		}
 	}
+	for _, v := range currentMap {
+		current = append(current, v)
+	}
+	sort.Slice(current, func(i, j int) bool {
+		return current[i].Unix < current[j].Unix
+	})
+
 	var index = 0
 	sort.Slice(price, func(i, j int) bool {
 		return price[i].Unix < price[j].Unix
@@ -181,4 +213,33 @@ func Write2(path string, data []PriceData) {
 
 	WriterCsv.Flush() //刷新，不刷新是无法写入的
 	log.Println("数据写入成功...")
+}
+
+func Write3(path string, data []CurrentDay) {
+	File, _ := os.OpenFile(path, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
+
+	defer File.Close()
+
+	//创建写入接口
+	WriterCsv := csv.NewWriter(File)
+	_ = WriterCsv.Write([]string{"时间", "最小价格（ETH）", "最大价格（ETH）"})
+	for _, v := range data {
+		//写入一条数据，传入数据为切片(追加模式)
+		_ = WriterCsv.Write([]string{
+			time.Unix(v.Unix, 10).Format("2006-01-02 15:04"),
+			v.Min.Round(4).String(),
+			v.Max.Round(4).String(),
+		})
+	}
+
+	WriterCsv.Flush() //刷新，不刷新是无法写入的
+	log.Println("数据写入成功...")
+}
+
+const DaySecond = 24 * 60 * 60
+
+// 获取毫秒时间戳的当天整点时间戳
+func GetDateByNS(i int64, o int64) int64 {
+	bn := int64(DaySecond * 1000)
+	return ((i/bn)*bn - o) / 1000
 }
