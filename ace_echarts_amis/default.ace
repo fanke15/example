@@ -43,7 +43,9 @@ html lang=en
 
 
   body
+
     div#root.app-wrapper
+
 
     script src="/assets/amis/sdk.js" type="text/javascript"
     script src="/assets/amis/jquery.js" type="text/javascript"
