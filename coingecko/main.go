@@ -13,12 +13,13 @@ import (
 )
 
 func main() {
-	data, _ := GetOtherPriceHistoryByCoin(
+	data, all, _ := GetOtherPriceHistoryByCoin(
 		[]decimal.Decimal{decimal.NewFromFloat(0.95), decimal.NewFromFloat(0.96)},
 		[]decimal.Decimal{decimal.NewFromFloat(0.97), decimal.NewFromFloat(0.98)},
 	)
 
 	Write("back_test.csv", data)
+	Write2("all.csv", all)
 }
 
 var (
@@ -57,10 +58,9 @@ type BackTest struct {
 }
 
 // 从coingecko获取令牌历史价格，交易量数据
-func GetOtherPriceHistoryByCoin(min, max []decimal.Decimal) (data []BackTest, err error) {
+func GetOtherPriceHistoryByCoin(min, max []decimal.Decimal) (data []BackTest, price []PriceData, err error) {
 	var (
 		tempData  coingeckoPriceData
-		price     = make([]PriceData, 0)
 		tempPrice = make([]PriceData, 0)
 
 		nextTempPrice = make([]PriceData, 0)
@@ -68,13 +68,14 @@ func GetOtherPriceHistoryByCoin(min, max []decimal.Decimal) (data []BackTest, er
 
 	resp, err := InitReq().SetResult(&tempData).Get("https://www.coingecko.com/price_charts/13442/eth/90_days.json")
 	if err != nil {
+		fmt.Println("err:", err.Error())
 		return
 	}
 	if !resp.IsSuccess() {
 		fmt.Println("resp err.")
 		return
 	}
-
+	fmt.Println(111111, len(tempData.Stats))
 	// 渲染响应结果
 	for _, v := range tempData.Stats {
 		price = append(price, PriceData{
@@ -155,6 +156,26 @@ func Write(path string, data []BackTest) {
 			v.Start.Price.Round(4).String(),
 			time.Unix(v.End.Unix/1000, 10).Format("2006-01-02 15:04"),
 			v.End.Price.Round(4).String(),
+		})
+	}
+
+	WriterCsv.Flush() //刷新，不刷新是无法写入的
+	log.Println("数据写入成功...")
+}
+
+func Write2(path string, data []PriceData) {
+	File, _ := os.OpenFile(path, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
+
+	defer File.Close()
+
+	//创建写入接口
+	WriterCsv := csv.NewWriter(File)
+	_ = WriterCsv.Write([]string{"时间", "价格（ETH）"})
+	for _, v := range data {
+		//写入一条数据，传入数据为切片(追加模式)
+		_ = WriterCsv.Write([]string{
+			time.Unix(v.Unix/1000, 10).Format("2006-01-02 15:04"),
+			v.Price.Round(4).String(),
 		})
 	}
 
