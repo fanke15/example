@@ -4,15 +4,25 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"github.com/360EntSecGroup-Skylar/excelize"
 	"github.com/imroc/req/v3"
 	"github.com/shopspring/decimal"
 	"log"
 	"os"
 	"sort"
+	"strconv"
 	"time"
 )
 
 func main() {
+	data := ReadExcel(
+		[]decimal.Decimal{decimal.NewFromFloat(0.94), decimal.NewFromFloat(0.95)},
+		[]decimal.Decimal{decimal.NewFromFloat(0.96), decimal.NewFromFloat(10)},
+	)
+	Write4("block.csv", data)
+}
+
+func main1() {
 	data, all, current, _ := GetOtherPriceHistoryByCoin(
 		[]decimal.Decimal{decimal.NewFromFloat(0.95), decimal.NewFromFloat(0.96)},
 		[]decimal.Decimal{decimal.NewFromFloat(0.97), decimal.NewFromFloat(0.98)},
@@ -236,10 +246,84 @@ func Write3(path string, data []CurrentDay) {
 	log.Println("数据写入成功...")
 }
 
+func Write4(path string, data []BackTest) {
+	File, _ := os.OpenFile(path, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0666)
+
+	defer File.Close()
+
+	//创建写入接口
+	WriterCsv := csv.NewWriter(File)
+	_ = WriterCsv.Write([]string{"startBlock", "startPrice", "endBlock", "endPrice"})
+	for _, v := range data {
+		//写入一条数据，传入数据为切片(追加模式)
+		_ = WriterCsv.Write([]string{
+			strconv.Itoa(int(v.Start.Unix)),
+			v.Start.Price.Round(4).String(),
+			strconv.Itoa(int(v.End.Unix)),
+			v.End.Price.Round(4).String(),
+		})
+	}
+
+	WriterCsv.Flush() //刷新，不刷新是无法写入的
+	log.Println("数据写入成功...")
+}
+
 const DaySecond = 24 * 60 * 60
 
 // 获取毫秒时间戳的当天整点时间戳
 func GetDateByNS(i int64, o int64) int64 {
 	bn := int64(DaySecond * 1000)
 	return ((i/bn)*bn - o) / 1000
+}
+
+func ReadExcel(min, max []decimal.Decimal) []BackTest {
+	var (
+		data = make([]BackTest, 0)
+
+		all       = make([]PriceData, 0)
+		tempPrice = make([]PriceData, 0)
+	)
+
+	f, err := excelize.OpenFile("./3m.xlsx")
+	if err != nil {
+		fmt.Println(err)
+		return data
+	}
+	rows := f.GetRows("steth3MonthPrice")
+	for k, v := range rows {
+		if k == 0 {
+			continue
+		}
+		i, _ := strconv.Atoi(v[0])
+		all = append(all, PriceData{
+			Unix:  int64(i),
+			Price: StrToDecimal(v[1]),
+		})
+	}
+	// 分析
+	filter := min
+	for i := 0; i < len(all); i++ {
+		if isWithin(all[i].Price, filter) {
+			tempPrice = append(tempPrice, all[i])
+			if EqualAny(filter, min) {
+				filter = max
+			} else {
+				filter = min
+			}
+		}
+	}
+	// 处理结果
+	realLen := len(tempPrice) / 2
+	for i := 0; i < realLen; i++ {
+		data = append(data, BackTest{
+			Start: tempPrice[i*2],
+			End:   tempPrice[i*2+1],
+		})
+	}
+	return data
+}
+
+func StrToDecimal(str string) decimal.Decimal {
+	v, _ := decimal.NewFromString(str)
+	return v
 }
