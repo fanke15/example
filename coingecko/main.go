@@ -311,6 +311,7 @@ func ReadExcel(min, max []decimal.Decimal) []BackTest {
 				filter = min
 			}
 		}
+
 	}
 	// 处理结果
 	realLen := len(tempPrice) / 2
