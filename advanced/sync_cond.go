@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"os"
-	"os/signal"
 	"sync"
 	"time"
 )
@@ -50,6 +48,7 @@ func main() {
 	go func() {
 		for {
 			fifo.Offer(rand.Int())
+			fmt.Println(1111111, "offer")
 		}
 	}()
 
@@ -65,7 +64,10 @@ func main() {
 		}
 	}()
 
-	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, os.Interrupt)
-	<-ch
+	//ch := make(chan os.Signal, 1)
+	//signal.Notify(ch, os.Interrupt)
+	//
+	//<-ch
+
+	select {}
 }
