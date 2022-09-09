@@ -6,6 +6,7 @@ require (
 	github.com/360EntSecGroup-Skylar/excelize v1.4.1
 	github.com/PuerkitoBio/goquery v1.5.1
 	github.com/antchfx/htmlquery v1.2.3
+	github.com/buger/jsonparser v1.1.1
 	github.com/chromedp/chromedp v0.8.2
 	github.com/gin-gonic/gin v1.8.1
 	github.com/gocolly/colly/v2 v2.1.0
