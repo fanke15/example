@@ -53,9 +53,14 @@ type ServiceStakedData struct {
 	Income            decimal.Decimal `gorm:"column:income" json:"income"`                         // 总收入
 	PerIncome         decimal.Decimal `gorm:"column:per_income" json:"per_column"`                 // ETH日收益
 	Apr               decimal.Decimal `gorm:"column:apr" json:"apr"`                               // 年化收益
-	Volume1           decimal.Decimal `gorm:"column:volume1" json:"volume1"`                       // 24小时交易量
-	Holders           decimal.Decimal `gorm:"column:holders" json:"holders"`                       // 24小时交易量
-	CurrentDay        int64           `gorm:"column:current_day" json:"current_day"`               // 当天时间戳
+	CM                `gorm:"embedded"`
+}
+
+type CM struct {
+	Apr        decimal.Decimal `gorm:"column:apr" json:"apr"`                 // 年化收益
+	Volume1    decimal.Decimal `gorm:"column:volume1" json:"volume1"`         // 24小时交易量
+	Holders    decimal.Decimal `gorm:"column:holders" json:"holders"`         // 24小时交易量
+	CurrentDay int64           `gorm:"column:current_day" json:"current_day"` // 当天时间戳
 }
 
 func (ps *ServiceStakedData) TableName() string {
