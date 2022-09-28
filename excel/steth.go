@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 	"sort"
 
 	"encoding/csv"
@@ -14,7 +16,8 @@ import (
 )
 
 func main() {
-	data := getStEthData()
+
+	data := getStEthData().DataList
 
 	fmt.Println(1111, len(data))
 
@@ -44,8 +47,19 @@ func main() {
 
 }
 
+type ServiceStaked struct {
+	ID        int                 `gorm:"column:id" json:"id"`
+	UUID      string              `gorm:"column:uuid;primaryKey" json:"uuid"`
+	Name      string              `gorm:"column:name" json:"name"`
+	TokenName string              `gorm:"column:token_name" json:"token_name"`
+	Type      string              `gorm:"column:type" json:"type"`
+	DataList  []ServiceStakedData `gorm:"foreignkey:Name;references:Name" json:"data_list"`
+}
+
 type ServiceStakedData struct {
-	Name              string          `gorm:"column:name" json:"name"`
+	ID   int    `gorm:"column:id" json:"id"`
+	UUID string `gorm:"column:uuid;primaryKey" json:"uuid"`
+	NameEr
 	StakedEther       decimal.Decimal `gorm:"column:staked_ether" json:"staked_ether"`
 	Validators        decimal.Decimal `gorm:"column:validators" json:"validators"`
 	ActiveValidators  decimal.Decimal `gorm:"column:active_validators" json:"active_validators"`   // 激活状态的验证者数量
@@ -56,11 +70,22 @@ type ServiceStakedData struct {
 	CM                `gorm:"embedded"`
 }
 
+type NameEr struct {
+	Name string `gorm:"column:name" json:"name"`
+}
 type CM struct {
-	Apr        decimal.Decimal `gorm:"column:apr" json:"apr"`                 // 年化收益
-	Volume1    decimal.Decimal `gorm:"column:volume1" json:"volume1"`         // 24小时交易量
-	Holders    decimal.Decimal `gorm:"column:holders" json:"holders"`         // 24小时交易量
-	CurrentDay int64           `gorm:"column:current_day" json:"current_day"` // 当天时间戳
+	Apr     decimal.Decimal `gorm:"column:apr" json:"apr"`         // 年化收益
+	Volume1 decimal.Decimal `gorm:"column:volume1" json:"volume1"` // 24小时交易量
+	Holders decimal.Decimal `gorm:"column:holders" json:"holders"` // 24小时交易量
+	CDer    `gorm:"embedded"`
+}
+
+type CDer struct {
+	CurrentDay int64 `gorm:"column:current_day" json:"current_day"` // 当天时间戳
+}
+
+func (ps *ServiceStaked) TableName() string {
+	return "postat_service_staked"
 }
 
 func (ps *ServiceStakedData) TableName() string {
@@ -68,9 +93,16 @@ func (ps *ServiceStakedData) TableName() string {
 }
 
 // 连接数据库获取所有数据
-func getStEthData() []ServiceStakedData {
-	temp := make([]ServiceStakedData, 0)
-	db, err := gorm.Open(mysql.Open("root:zkf123456@tcp(127.0.0.1:3306)/postat?charset=utf8mb4&parseTime=true&loc=Local"), nil)
+func getStEthData() ServiceStaked {
+	temp := ServiceStaked{}
+	db, err := gorm.Open(mysql.Open("root:zkf123456@tcp(127.0.0.1:3306)/postat?charset=utf8mb4&parseTime=true&loc=Local"), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			TablePrefix:   "postat_",
+			SingularTable: true,
+		},
+
+		Logger: logger.Default.LogMode(logger.Info),
+	})
 	if err != nil {
 		fmt.Println(err)
 		return temp
@@ -86,7 +118,7 @@ func getStEthData() []ServiceStakedData {
 	// 获取数据
 	fmt.Println(db)
 
-	err = db.Model(ServiceStakedData{}).Where("name = ? and current_day > ?", "Lido", 1608134400).Find(&temp).Error
+	err = db.Model(ServiceStaked{}).Where("name = ?", "Lido").Preload("DataList").Find(&temp).Error
 	fmt.Println(err)
 
 	return temp
