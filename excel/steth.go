@@ -47,6 +47,10 @@ func main() {
 
 }
 
+type MyData struct {
+	ServiceStaked
+}
+
 type ServiceStaked struct {
 	ID        int                 `gorm:"column:id" json:"id"`
 	UUID      string              `gorm:"column:uuid;primaryKey" json:"uuid"`
@@ -93,8 +97,8 @@ func (ps *ServiceStakedData) TableName() string {
 }
 
 // 连接数据库获取所有数据
-func getStEthData() ServiceStaked {
-	temp := ServiceStaked{}
+func getStEthData() MyData {
+	temp := MyData{}
 	db, err := gorm.Open(mysql.Open("root:zkf123456@tcp(127.0.0.1:3306)/postat?charset=utf8mb4&parseTime=true&loc=Local"), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
 			TablePrefix:   "postat_",
@@ -112,13 +116,14 @@ func getStEthData() ServiceStaked {
 		fmt.Println(err)
 		return temp
 	}
+
 	sqlDB.SetMaxIdleConns(10)
 	sqlDB.SetMaxOpenConns(100)
 
 	// 获取数据
 	fmt.Println(db)
 
-	err = db.Model(ServiceStaked{}).Where("name = ?", "Lido").Preload("DataList").Find(&temp).Error
+	err = db.Model(MyData{}).Where("name = ?", "Lido").Preload("DataList").Find(&temp).Error
 	fmt.Println(err)
 
 	return temp
