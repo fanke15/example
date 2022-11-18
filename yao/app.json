@@ -9,7 +9,7 @@
 	  "hide_menu": false,
 	  "login": {
 		"entry": {
-		  "admin": "/table/pet"
+		  "admin": "/table/apy"
 		}
 	  }
 	}

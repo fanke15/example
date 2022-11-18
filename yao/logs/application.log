@@ -1,0 +1,102 @@
+time="2022-11-18T17:38:30+08:00" level=trace msg="SELECT SQLITE_VERSION()" version=3.36.0
+time="2022-11-18T17:38:30+08:00" level=trace msg="SELECT SQLITE_VERSION()" version=3.36.0
+time="2022-11-18T17:38:30+08:00" level=trace msg="SELECT SQLITE_VERSION()" version=3.36.0
+time="2022-11-18T17:38:30+08:00" level=trace msg="SELECT SQLITE_VERSION()" version=3.36.0
+time="2022-11-18T17:38:30+08:00" level=debug msg="SELECT `name` FROM `sqlite_master` WHERE type='table' AND name='xiang_workflow'"
+time="2022-11-18T17:38:30+08:00" level=debug msg="CREATE INDEX `xiang_workflow_name_index` ON `xiang_workflow` (`name`);\nCREATE INDEX `xiang_workflow_data_id_index` ON `xiang_workflow` (`data_id`);\nCREATE INDEX `xiang_workflow_node_name_index` ON `xiang_workflow` (`node_name`);\nCREATE INDEX `xiang_workflow_node_status_index` ON `xiang_workflow` (`node_status`);\nCREATE INDEX `xiang_workflow_user_id_index` ON `xiang_workflow` (`user_id`);\nCREATE INDEX `xiang_workflow_user_ids_index` ON `xiang_workflow` (`user_ids`);\nCREATE INDEX `xiang_workflow_status_index` ON `xiang_workflow` (`status`);\nCREATE INDEX `xiang_workflow_created_at_index` ON `xiang_workflow` (`created_at`);\nCREATE INDEX `xiang_workflow_updated_at_index` ON `xiang_workflow` (`updated_at`);\nCREATE INDEX `xiang_workflow_deleted_at_index` ON `xiang_workflow` (`deleted_at`)"
+time="2022-11-18T17:38:30+08:00" level=debug msg="CREATE TABLE `xiang_workflow` (\n`id` INTEGER PRIMARY KEY  AUTOINCREMENT,\n`name` VARCHAR(255) NULL,\n`data_id` BIGINT NULL,\n`node_name` VARCHAR(255) NULL,\n`node_status` TEXT CHECK( `node_status` IN ('未开始','进行中','已完成') ) NOT NULL DEFAULT '未开始',\n`user_id` BIGINT NULL,\n`user_ids` VARCHAR(255) NULL,\n`users` TEXT NULL,\n`input` TEXT NULL,\n`output` TEXT NULL,\n`history` TEXT NULL,\n`status` TEXT CHECK( `status` IN ('未开始','进行中','已完成','已关闭') ) NOT NULL DEFAULT '未开始',\n`deleted_at` TIMESTAMP(0) NULL,\n`created_at` TIMESTAMP(0) NULL,\n`updated_at` TIMESTAMP(0) NULL,\n`__restore_data` TEXT NULL\n)"
+time="2022-11-18T17:38:30+08:00" level=debug msg="SELECT `name` FROM `sqlite_master` WHERE type='table' AND name='xiang_menu'"
+time="2022-11-18T17:38:30+08:00" level=debug msg="CREATE INDEX `xiang_menu_parent_index` ON `xiang_menu` (`parent`);\nCREATE INDEX `xiang_menu_name_index` ON `xiang_menu` (`name`);\nCREATE INDEX `xiang_menu_blocks_index` ON `xiang_menu` (`blocks`);\nCREATE INDEX `xiang_menu_visible_menu_index` ON `xiang_menu` (`visible_menu`);\nCREATE INDEX `xiang_menu_path_index` ON `xiang_menu` (`path`);\nCREATE INDEX `xiang_menu_rank_index` ON `xiang_menu` (`rank`);\nCREATE INDEX `xiang_menu_status_index` ON `xiang_menu` (`status`);\nCREATE INDEX `xiang_menu_created_at_index` ON `xiang_menu` (`created_at`);\nCREATE INDEX `xiang_menu_updated_at_index` ON `xiang_menu` (`updated_at`);\nCREATE INDEX `xiang_menu_deleted_at_index` ON `xiang_menu` (`deleted_at`)"
+time="2022-11-18T17:38:30+08:00" level=debug msg="CREATE TABLE `xiang_menu` (\n`id` INTEGER PRIMARY KEY  AUTOINCREMENT,\n`parent` BIGINT NULL,\n`name` VARCHAR(200) NULL,\n`icon` VARCHAR(200) NULL,\n`blocks` BOOLEAN NOT NULL DEFAULT false,\n`visible_menu` BOOLEAN NOT NULL DEFAULT false,\n`path` VARCHAR(200) NULL,\n`rank` INTEGER NOT NULL DEFAULT 9999,\n`status` TEXT CHECK( `status` IN ('enabled','disabled') ) NOT NULL DEFAULT 'enabled',\n`deleted_at` TIMESTAMP(0) NULL,\n`created_at` TIMESTAMP(0) NULL,\n`updated_at` TIMESTAMP(0) NULL,\n`__restore_data` TEXT NULL\n)"
+time="2022-11-18T17:38:30+08:00" level=debug msg="insert into `xiang_menu` (`created_at`, `name`, `path`, `icon`, `rank`, `status`, `visible_menu`, `blocks`) values (CURRENT_TIMESTAMP,?,?,?,?,?,?,?)" bindings="[数据看板 /kanban icon-activity 1 enabled 0 1]"
+time="2022-11-18T17:38:30+08:00" level=debug msg="insert into `xiang_menu` (`visible_menu`, `blocks`, `created_at`, `name`, `path`, `icon`, `rank`, `status`) values (?,?,CURRENT_TIMESTAMP,?,?,?,?,?)" bindings="[0 0 云服务库 /table/service icon-cloud 2 enabled]"
+time="2022-11-18T17:38:30+08:00" level=debug msg="SELECT `name` FROM `sqlite_master` WHERE type='table' AND name='xiang_user'"
+time="2022-11-18T17:38:30+08:00" level=debug msg="CREATE INDEX `xiang_user_type_index` ON `xiang_user` (`type`);\nCREATE INDEX `xiang_user_email_index` ON `xiang_user` (`email`);\nCREATE INDEX `xiang_user_mobile_index` ON `xiang_user` (`mobile`);\nCREATE INDEX `xiang_user_password_index` ON `xiang_user` (`password`);\nCREATE INDEX `xiang_user_password2nd_index` ON `xiang_user` (`password2nd`);\nCREATE INDEX `xiang_user_name_index` ON `xiang_user` (`name`);\nCREATE INDEX `xiang_user_idcard_index` ON `xiang_user` (`idcard`);\nCREATE UNIQUE INDEX `xiang_user_key_unique` ON `xiang_user` (`key`);\nCREATE INDEX `xiang_user_secret_index` ON `xiang_user` (`secret`);\nCREATE INDEX `xiang_user_status_index` ON `xiang_user` (`status`);\nCREATE UNIQUE INDEX `xiang_user_type_email_unique` ON `xiang_user` (`type`,`email`);\nCREATE UNIQUE INDEX `xiang_user_type_mobile_unique` ON `xiang_user` (`type`,`mobile`);\nCREATE INDEX `xiang_user_created_at_index` ON `xiang_user` (`created_at`);\nCREATE INDEX `xiang_user_updated_at_index` ON `xiang_user` (`updated_at`);\nCREATE INDEX `xiang_user_deleted_at_index` ON `xiang_user` (`deleted_at`)"
+time="2022-11-18T17:38:30+08:00" level=debug msg="CREATE TABLE `xiang_user` (\n`id` INTEGER PRIMARY KEY  AUTOINCREMENT,\n`type` TEXT CHECK( `type` IN ('admin','staff','user','robot') ) NOT NULL DEFAULT 'user',\n`email` VARCHAR(50) NULL,\n`mobile` VARCHAR(50) NULL,\n`password` VARCHAR(256) NULL,\n`password2nd` VARCHAR(256) NULL,\n`name` VARCHAR(80) NULL,\n`idcard` VARCHAR(256) NULL,\n`key` VARCHAR(256) NULL,\n`secret` VARCHAR(256) NULL,\n`extra` TEXT NULL,\n`status` TEXT CHECK( `status` IN ('enabled','disabled') ) NOT NULL DEFAULT 'enabled',\n`deleted_at` TIMESTAMP(0) NULL,\n`created_at` TIMESTAMP(0) NULL,\n`updated_at` TIMESTAMP(0) NULL,\n`__restore_data` TEXT NULL\n)"
+time="2022-11-18T17:38:30+08:00" level=debug msg="insert into `xiang_user` (`type`, `email`, `password`, `secret`, `status`, `extra`, `key`, `mobile`, `created_at`, `name`) values (?,?,?,?,?,?,?,?,CURRENT_TIMESTAMP,?)" bindings="[admin xiang@iqka.com $2a$04$TulhLAJHmyaGcyX.VpfzLOTvUNyXyLOgfjNLLnu/0eUmrYPp.OUoC XMTdNRVigbgUiAPdiJCfaWgWcz2PaQXw enabled {\"sex\":\"男\"} 8304925176 <nil> 管理员]"
+time="2022-11-18T17:38:30+08:00" level=debug msg="insert into `xiang_user` (`name`, `email`, `mobile`, `status`, `key`, `extra`, `created_at`, `type`, `password`, `secret`) values (?,?,?,?,?,?,CURRENT_TIMESTAMP,?,?,?)" bindings="[员工 staff@iqka.com <nil> enabled <nil> {\"sex\":\"女\"} staff $2a$04$dgLbvm.HKTu4drYO4LZ7LO8Se5Wr/22FpHJsQcRtVrnGlXkSZfPo6 <nil>]"
+time="2022-11-18T17:38:30+08:00" level=debug msg="insert into `xiang_user` (`type`, `password`, `extra`, `status`, `mobile`, `key`, `created_at`, `secret`, `name`, `email`) values (?,?,?,?,?,?,CURRENT_TIMESTAMP,?,?,?)" bindings="[user $2a$04$ZtYcUSXAmM/IcPrcLQ/E1.M.cLBqsDhMHFf8RJ/3ARqykfpTuHDuu {\"sex\":\"女\"} enabled 13900001111 <nil> <nil> 用户 <nil>]"
+time="2022-11-18T17:38:30+08:00" level=debug msg="insert into `xiang_user` (`password`, `name`, `mobile`, `secret`, `status`, `created_at`, `type`, `key`, `extra`, `email`) values (?,?,?,?,?,CURRENT_TIMESTAMP,?,?,?,?)" bindings="[<nil> 机器人 <nil> wBeYjL7FjbcvpAdBrxtDFfjydsoPKhRN enabled robot 3845196072 {\"sex\":\"女\"} <nil>]"
+time="2022-11-18T17:38:30+08:00" level=debug msg="SELECT `name` FROM `sqlite_master` WHERE type='table' AND name='apy'"
+time="2022-11-18T17:38:30+08:00" level=debug msg="CREATE UNIQUE INDEX `apy_sn_unique` ON `apy` (`sn`);\nCREATE INDEX `apy_name_index` ON `apy` (`name`);\nCREATE INDEX `apy_kind_index` ON `apy` (`kind`);\nCREATE INDEX `apy_created_at_index` ON `apy` (`created_at`);\nCREATE INDEX `apy_updated_at_index` ON `apy` (`updated_at`);\nCREATE INDEX `apy_deleted_at_index` ON `apy` (`deleted_at`)"
+time="2022-11-18T17:38:30+08:00" level=debug msg="CREATE TABLE `apy` (\n`id` INTEGER PRIMARY KEY  AUTOINCREMENT,\n`sn` VARCHAR(200) NULL,\n`name` VARCHAR(200) NULL,\n`kind` TEXT CHECK( `kind` IN ('cat','dog') ) NOT NULL DEFAULT 'cat',\n`desc` VARCHAR(200) NULL,\n`deleted_at` TIMESTAMP(0) NULL,\n`created_at` TIMESTAMP(0) NULL,\n`updated_at` TIMESTAMP(0) NULL,\n`__restore_data` TEXT NULL\n)"
+time="2022-11-18T17:38:30+08:00" level=debug msg="insert into `apy` (`name`, `kind`, `desc`, `created_at`, `sn`) values (?,?,?,CURRENT_TIMESTAMP,?)" bindings="[Cookie cat a cat 100001]"
+time="2022-11-18T17:38:30+08:00" level=debug msg="insert into `apy` (`created_at`, `sn`, `name`, `kind`, `desc`) values (CURRENT_TIMESTAMP,?,?,?,?)" bindings="[100002 Beibei dog a dog]"
+time="2022-11-18T17:38:37+08:00" level=trace msg="SELECT SQLITE_VERSION()" version=3.36.0
+time="2022-11-18T17:38:37+08:00" level=trace msg="SELECT SQLITE_VERSION()" version=3.36.0
+time="2022-11-18T17:38:37+08:00" level=trace msg="SELECT SQLITE_VERSION()" version=3.36.0
+time="2022-11-18T17:38:37+08:00" level=trace msg="SELECT SQLITE_VERSION()" version=3.36.0
+time="2022-11-18T17:38:37+08:00" level=info msg="[Watch] Watching: /Users/zl/Desktop/Fanke/project/devPkg/example/yao/apis"
+time="2022-11-18T17:38:37+08:00" level=info msg="[Watch] Watching: /Users/zl/Desktop/Fanke/project/devPkg/example/yao/flows"
+time="2022-11-18T17:38:37+08:00" level=info msg="[Watch] Watching: /Users/zl/Desktop/Fanke/project/devPkg/example/yao/libs"
+time="2022-11-18T17:38:37+08:00" level=info msg="[Watch] Watching: /Users/zl/Desktop/Fanke/project/devPkg/example/yao/logs"
+time="2022-11-18T17:38:37+08:00" level=info msg="[Watch] Watching: /Users/zl/Desktop/Fanke/project/devPkg/example/yao/models"
+time="2022-11-18T17:38:37+08:00" level=info msg="[Watch] Watching: /Users/zl/Desktop/Fanke/project/devPkg/example/yao/scripts"
+time="2022-11-18T17:38:37+08:00" level=info msg="[Watch] Watching: /Users/zl/Desktop/Fanke/project/devPkg/example/yao/tables"
+time="2022-11-18T17:38:37+08:00" level=info msg="[Watch] Watching: /Users/zl/Desktop/Fanke/project/devPkg/example/yao/yao"
+time="2022-11-18T17:38:37+08:00" level=info msg="[Watch] Watching: /Users/zl/Desktop/Fanke/project/devPkg/example/yao/yao/icons"
+time="2022-11-18T17:38:37+08:00" level=trace msg="Session Store: File /Users/zl/Desktop/Fanke/project/devPkg/example/yao/data/.session.db"
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /api/xiang/chart/:name/data --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/chart/:name/setting --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/demo/next            --> github.com/yaoapp/gou.HTTP.Route.func2 (5 handlers)
+[GIN-debug] POST   /api/xiang/storage/upload --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/storage/readfile --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/storage/url    --> github.com/yaoapp/gou.HTTP.Route.func2 (5 handlers)
+[GIN-debug] GET    /api/xiang/storage/token  --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/ping           --> github.com/yaoapp/gou.HTTP.Route.func2 (5 handlers)
+[GIN-debug] POST   /api/xiang/ping/post      --> github.com/yaoapp/gou.HTTP.Route.func2 (5 handlers)
+[GIN-debug] GET    /api/xiang/inspect        --> github.com/yaoapp/gou.HTTP.Route.func2 (5 handlers)
+[GIN-debug] GET    /api/xiang/menu           --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/favicon.ico    --> github.com/yaoapp/gou.HTTP.Route.func2 (5 handlers)
+[GIN-debug] GET    /api/xiang/table/:name/search --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/table/:name/find/:id --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/table/:name/select --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] POST   /api/xiang/table/:name/save --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] POST   /api/xiang/table/:name/quicksave --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] POST   /api/xiang/table/:name/delete/:id --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] POST   /api/xiang/table/:name/insert --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] POST   /api/xiang/table/:name/delete/where --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] POST   /api/xiang/table/:name/delete/in --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] POST   /api/xiang/table/:name/update/where --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] POST   /api/xiang/table/:name/update/in --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/table/:name/setting --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/user/captcha   --> github.com/yaoapp/gou.HTTP.Route.func2 (5 handlers)
+[GIN-debug] POST   /api/xiang/user/login     --> github.com/yaoapp/gou.HTTP.Route.func2 (5 handlers)
+[GIN-debug] POST   /api/xiang/user/token     --> github.com/yaoapp/gou.HTTP.Route.func2 (5 handlers)
+[GIN-debug] GET    /api/xiang/user/menu      --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/user/info      --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/user/token/refresh --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] POST   /api/xiang/import/:name   --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/import/:name/setting --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] POST   /api/xiang/import/:name/data --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/import/:name/data/setting --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/import/:name/mapping --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/import/:name/mapping/setting --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/page/:name/data --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN-debug] GET    /api/xiang/page/:name/setting --> github.com/yaoapp/gou.HTTP.Route.func2 (6 handlers)
+[GIN] 2022/11/18 - 17:38:52 | 200 |    8.956254ms |       127.0.0.1 | GET      "/xiang/login/admin"
+[GIN] 2022/11/18 - 17:38:52 | 200 |    1.560144ms |       127.0.0.1 | GET      "/xiang/icon/md_icon.css"
+[GIN] 2022/11/18 - 17:38:52 | 200 |     6.43454ms |       127.0.0.1 | GET      "/xiang/umi.aa2ab3a2.css"
+[GIN] 2022/11/18 - 17:38:52 | 200 |   25.903789ms |       127.0.0.1 | GET      "/xiang/umi.bb03c440.js"
+[GIN] 2022/11/18 - 17:38:52 | 200 |    6.929919ms |       127.0.0.1 | GET      "/xiang/3475.a80f2229.chunk.css"
+[GIN] 2022/11/18 - 17:38:52 | 200 |    4.635682ms |       127.0.0.1 | GET      "/xiang/layouts__index.2dfc6d0f.chunk.css"
+[GIN] 2022/11/18 - 17:38:52 | 200 |    1.909132ms |       127.0.0.1 | GET      "/xiang/layouts__index.1934db86.async.js"
+[GIN] 2022/11/18 - 17:38:52 | 200 |   16.938817ms |       127.0.0.1 | GET      "/xiang/vendors.6af24a02.async.js"
+[GIN] 2022/11/18 - 17:38:52 | 200 |    6.178726ms |       127.0.0.1 | GET      "/api/xiang/inspect"
+time="2022-11-18T17:38:52+08:00" level=debug msg="图形/音频 ID:R4636dKQCSnNn7xu9qtC 验证码:04049"
+[GIN] 2022/11/18 - 17:38:52 | 200 |   14.755444ms |       127.0.0.1 | GET      "/api/xiang/user/captcha?type=digit"
+[GIN] 2022/11/18 - 17:38:52 | 404 |      60.382µs |       127.0.0.1 | GET      "/favicon.ico"
+[GIN] 2022/11/18 - 17:38:52 | 200 |     637.123µs |       127.0.0.1 | GET      "/xiang/p__login__admin__index.671ad519.chunk.css"
+[GIN] 2022/11/18 - 17:38:52 | 200 |     712.123µs |       127.0.0.1 | GET      "/xiang/p__login__admin__index.1cb6aa62.async.js"
+[GIN] 2022/11/18 - 17:38:52 | 200 |    2.965384ms |       127.0.0.1 | GET      "/xiang/static/bg_login_admin.501b2915.svg"
+[GIN] 2022/11/18 - 17:38:52 | 200 |    3.772188ms |       127.0.0.1 | GET      "/xiang/icon/md_icon_outline.otf"
+[GIN] 2022/11/18 - 17:38:52 | 200 |     266.884µs |       127.0.0.1 | GET      "/api/xiang/favicon.ico"
+[GIN] 2022/11/18 - 17:39:14 | 200 |    1.639982ms |       127.0.0.1 | GET      "/"
+time="2022-11-18T17:40:38+08:00" level=info msg="[Watch] Stopped"
+time="2022-11-18T17:40:38+08:00" level=info msg="[Watch] The event handler exit"

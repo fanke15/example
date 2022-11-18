@@ -2,7 +2,7 @@
 		"name": "Pet",
 		"version": "1.0.0",
 		"decription": "Pet admin",
-		"bind": { "model": "pet" },
+		"bind": { "model": "apy" },
 		"apis": {},
 		"columns": {
 		  "ID": {
