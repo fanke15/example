@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  yao:
+    image: yaoapp/yao-wms:1.0.3-amd64
+    environment:
+      - YAO_INIT=demo
+        YAO_PROCESS_RESET=flows.init.menu
+        YAO_PROCESS_DEMO=flows.demo.data
+        YAO_DB_DRIVER=mysql
+        YAO_DB_PRIMARY="yao:123456@tcp(mysql:3306)/yao?charset=utf8mb4&parseTime=True&loc=Local"
+        YAO_SESSION_STORE=redis \
+        YAO_SESSION_HOST=redis \
+        YAO_SESSION_PORT=6379 \
+        YAO_SESSION_PASSWORD=123456 \
+    ports:
+      - "5099:5099"
+    volumes:
+      - data:/data/app/data
+    depends_on:
+      - mysql
+        redis
+    deploy:
+      restart_policy:
+        condition: unless-stopped
+        max-attempts: 3
+
+  mysql:
+    image: yaoapp/mysql:8.0-amd64
+    environment:
+      - MYSQL_PASSWORD=123456
+    deploy:
+      restart_policy:
+        condition: unless-stopped
+        max-attempts: 3
+
+  redis:
+    image: yaoapp/mysql:8.0-amd64
+    environment:
+      - REDIS_PASSWORD=123456
+    deploy:
+      restart_policy:
+        condition: unless-stopped
+        max-attempts: 3
+
+volumes:
+  data: {}
