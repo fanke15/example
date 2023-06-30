@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+	      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<title>{{meta_title}}</title>
+	<link rel="stylesheet" href="{{asset 'css/style.min.css'}}">
+	{{ghost_head}}
+</head>
+
+<body class="{{body_class}}">
+{{{body}}}
+<script src="{{asset 'js/index.min.js'}}"></script>
+{{#is 'post'}}
+	<script src="{{asset 'js/post.min.js'}}"></script>
+{{/is}}
+
+<script>
+
+</script>
+{{ghost_foot}}
+</body>
+</html>
