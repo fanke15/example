@@ -1,18 +1,23 @@
-// pages/article/index.js
+const WxParse = require('../../wxParse/wxParse.js');
+const api = require('../../utils/api.js');
+const http = require('../../utils/http.js');
+
+
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-
+    article:{}
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-
+    this.getArticleByID(options.articleID)
   },
 
   /**
@@ -62,5 +67,24 @@ Page({
    */
   onShareAppMessage() {
 
+  },
+  getArticleByID:function(articleID){
+    var that = this;
+    var query = {
+      id:articleID,
+      page:1,
+      limit:100,
+      fields:'id,title,html,feature_image,updated_at,excerpt',
+      filter:'',
+      include:'tags'
+    }
+    var req = http.getRequest(api.getArticleDetailUrl(query));
+    req.then(res=>{
+      var info = res.data.posts[0]
+      WxParse.wxParse('info', 'html', info.html, that, 10);
+      this.setData({
+        article:info
+      })
+    })
   }
 })

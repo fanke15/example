@@ -10,5 +10,18 @@
         "navigationBarTextStyle": "white"
     },
     "style": "v2",
-    "sitemapLocation": "sitemap.json"
+    "sitemapLocation": "sitemap.json",
+    "usingComponents": {
+      "van-image": "../../dist/image/index",
+      "van-tabs": "../../dist/tabs",
+      "van-tab": "../../dist/tab",
+      "van-skeleton": "../../dist/skeleton/index",
+      "van-notice-bar": "../../dist/notice-bar/index",
+      "van-divider": "../../dist/divider/index",
+      "van-card": "../../dist/card/index",
+      "van-tag": "../../dist/tag/index",
+      "van-panel": "../../dist/panel/index",
+      "van-cell": "../../dist/cell/index",
+      "van-cell-group": "../../dist/cell-group/index"
+    }
 }

@@ -1,2 +1,22 @@
-<!--pages/article/index.wxml-->
-<text>pages/article/index.wxml</text>
+<import src="../../wxParse/wxParse.wxml" />
+
+<view>
+
+<van-cell value="" icon="tosend">
+  <view slot="title">
+    <view class="van-cell-text">{{article.title}}</view>
+    <block wx:for="{{article.tags}}" wx:for-item="tag">
+      <van-tag round color="#ffe1e1 " text-color="#ad0000">{{tag.name}}</van-tag>
+    </block>
+  </view>
+</van-cell>
+
+
+  <van-panel>
+    <!--文章主体-->
+    <view class="wxParse" style='padding:30rpx 10rpx 200rpx 20rpx'>
+      <template is="wxParse" data="{{wxParseData:info.nodes}}"/>
+    </view>
+  </van-panel>
+</view>
+

@@ -1,23 +1,120 @@
-
+const api = require('../../utils/api.js');
+const http = require('../../utils/http.js');
 
 Page({
   data: {
+    active: 0,
     post: {},
+    bannerList:[
+      {
+        imgurl:"http://fanke.net.cn/content/images/2023/06/pic_1020.jpg"
+      },
+      {
+        imgurl:"http://fanke.net.cn/content/images/2023/06/pic_1020.jpg"
+      },
+      {
+        imgurl:"http://fanke.net.cn/content/images/2023/06/pic_1020.jpg"
+      },
+    ],
+    articleTags:[],
+    bannerArticles:[],
+    articles:[]
   },
+  
    /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function () {
-    console.log("demo")
+    // 获取tags
+    this.getArticleTags()
 
+    // 加载全部文章
+    this.getArticles()
 
-wx.request({
-  //这里的url用的是新视觉实训的一个测试接口
-  url: 'https://fanke.net.cn/ghost/api/content/posts/?key=3af611d8878cdbf8d3316ff1f6',
-  //success是接口调用成功的回调函数,这里习惯用res去接收返回值
-  success:res=>{
-    console.log(res)
-  }
-})
+    // 加载Banner文章
+    this.getBannerArticles()
   },
+
+  onClickArticleDetail:function(event){
+    wx.navigateTo({
+      url: '../article/index?articleID='+event.currentTarget.dataset.info.id,
+      success:function(){
+        
+      },
+      fail:function(){
+
+      },
+      complete:function(){
+      },
+    })
+  },
+  onTagChange:function(event){
+    if (event.detail.index==0){
+      this.getArticles()
+    }else{
+      this.getArticlesByTag(event.detail.title)
+    }
+  },
+  getArticleTags:function(){
+    var query = {
+      page:1,
+      limit:20,
+      fields:'id,name',
+      filter:''
+    }
+    var tags = [{name:"全部"}]
+    var req = http.getRequest(api.getTagListUrl(query));
+    req.then(res=>{
+      res.data.tags.forEach(function(value, key, iterable){
+        tags.push(value)
+      })
+      this.setData({
+        articleTags:tags
+      })
+    })
+  },
+  getArticles:function(){
+    var query = {
+      page:1,
+      limit:100,
+      fields:'id,title,feature_image,updated_at,excerpt',
+      filter:'',
+      include:'tags'
+    }
+    var req = http.getRequest(api.getArticleListUrl(query));
+    req.then(res=>{
+      this.setData({
+        articles:res.data.posts
+      })
+    })
+  },
+  getBannerArticles:function(){
+    var query = {
+      page:1,
+      limit:9,
+      fields:'id,title,feature_image,updated_at,excerpt',
+      filter:'featured:true'
+    }
+    var req = http.getRequest(api.getArticleListUrl(query));
+    req.then(res=>{
+      this.setData({
+        bannerArticles:res.data.posts
+      })
+    })
+  },
+  getArticlesByTag:function(tagName){
+    var query = {
+      page:1,
+      limit:100,
+      fields:'id,title,feature_image,updated_at,excerpt',
+      filter:'tag:'+tagName,
+      include:'tags'
+    }
+    var req = http.getRequest(api.getArticleListUrl(query));
+    req.then(res=>{
+      this.setData({
+        articles:res.data.posts
+      })
+    })
+  }
 })

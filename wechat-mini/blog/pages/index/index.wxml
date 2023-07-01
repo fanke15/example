@@ -1,5 +1,53 @@
-<!--index.wxml-->
+<view>
+  <van-notice-bar
+  color="#1989fa"
+  background="#ecf9ff"
+  left-icon="certificate"
+  text="风雪在归途，万物不由声。"
+  />
+
+  <view>
+    <swiper 
+        class="home-swiper"
+        indicator-dots="true" 
+        autoplay="true" 
+        interval="5000"
+        duration="1000"
+        indicator-color="#bfbfbf"
+        indicator-active-color="#00ACED"
+      >
+        <block wx:for="{{bannerArticles}}">
+          <swiper-item>
+            <image src="{{item.feature_image}}" style="width:100%;height:100%" bindtap="onClickArticleDetail" data-info="{{item}}"></image>
+          </swiper-item>
+        </block>
+    </swiper>
+  </view>
+  <view>
+    <van-tabs active="{{active}}" bind:change="onTagChange">
+      <view wx:for="{{articleTags}}">
+        <van-tab title="{{item.name}}">
+          <block wx:for="{{articles}}" wx:for-item="article">
+            <view bindtap="onClickArticleDetail" data-info="{{article}}">
+              <van-card
+                tag="{{item.name}}"
+                desc="{{article.excerpt}}"
+                title="{{article.title}}"
+                thumb="{{article.feature_image}}"
+              >
+                <view slot="tags" >
+                  <block wx:for="{{article.tags}}" wx:for-item="tag">
+                    <van-tag round color="#ffe1e1 " text-color="#ad0000">{{tag.name}}</van-tag>
+                  </block>
+                </view>
+              </van-card>
+            </view>
+          </block>
+        </van-tab>
+      </view>
+    </van-tabs>
+  </view>
+</view>
 
 
 
-<web-view src="https://fanke.net.cn">v </web-view>
