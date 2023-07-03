@@ -4,18 +4,6 @@ const http = require('../../utils/http.js');
 Page({
   data: {
     active: 0,
-    post: {},
-    bannerList:[
-      {
-        imgurl:"http://fanke.net.cn/content/images/2023/06/pic_1020.jpg"
-      },
-      {
-        imgurl:"http://fanke.net.cn/content/images/2023/06/pic_1020.jpg"
-      },
-      {
-        imgurl:"http://fanke.net.cn/content/images/2023/06/pic_1020.jpg"
-      },
-    ],
     articleTags:[],
     bannerArticles:[],
     articles:[]
@@ -49,17 +37,18 @@ Page({
     })
   },
   onTagChange:function(event){
+    console.log(event.detail)
     if (event.detail.index==0){
       this.getArticles()
     }else{
-      this.getArticlesByTag(event.detail.title)
+      this.getArticlesByTag(event.detail.name)
     }
   },
   getArticleTags:function(){
     var query = {
       page:1,
       limit:20,
-      fields:'id,name',
+      fields:'id,name,slug',
       filter:''
     }
     var tags = [{name:"全部"}]

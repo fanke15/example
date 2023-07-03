@@ -26,7 +26,7 @@
   <view>
     <van-tabs active="{{active}}" bind:change="onTagChange">
       <view wx:for="{{articleTags}}">
-        <van-tab title="{{item.name}}">
+        <van-tab title="{{item.name}}" name="{{item.slug}}">
           <block wx:for="{{articles}}" wx:for-item="article">
             <view bindtap="onClickArticleDetail" data-info="{{article}}">
               <van-card
